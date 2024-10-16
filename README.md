@@ -102,10 +102,12 @@ In your config/logging.php:
         ->setReturnUrl('https://example.com/return')
         ->setCancelUrl('https://example.com/cancel')
         ->setNotificationUrl('https://example.com/notify')
+        ->setReference('REF123')
+        ->setLanguage('en')
         ->createPayment();
     
     if ($response['status']) {
-        echo "Payment link: " . $response['data']['payment_link'];
+        echo "Payment link: " . $response['data']['link'];
     } else {
         echo "Error: " . $response['error']['message'];
     }
