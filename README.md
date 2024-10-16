@@ -6,8 +6,21 @@ A Laravel package for integrating the Upayment payment gateway. It provides a co
 
 1. **Require the package using Composer:**
 
+   Run the following command in your terminal:
+
     ```bash
-    composer require osa-eg/osa-eg/laravel-upayments
+    composer require osa-eg/laravel-upayments -W
+    ```
+
+   The `-W` flag allows Composer to upgrade dependencies if needed. This can resolve version conflicts, such as when the project requires a different version of `psr/log`.
+
+**If there are still conflicts with `psr/log`:**
+
+   If you encounter an error stating that the `psr/log` version is incompatible, you can manually update `psr/log` to a compatible version before installing the package:
+
+    ```bash
+    composer require psr/log:^3.0
+    composer require osa-eg/laravel-upayments
     ```
 
 2. **Publish the configuration file:**
