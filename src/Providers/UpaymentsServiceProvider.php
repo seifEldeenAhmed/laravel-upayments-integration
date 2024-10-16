@@ -16,8 +16,7 @@ class UpaymentsServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('Upayments', function ($app) {
-            $logger = $app->make(LoggerInterface::class);
-            return new UpaymentsService($logger);
+            return new UpaymentsService();
         });
 
         $this->mergeConfigFrom(__DIR__ . '/../Config/upayments.php', 'upayments');
