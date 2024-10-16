@@ -9,7 +9,6 @@ A Laravel package for integrating the Upayment payment gateway. It provides a co
    Run the following command in your terminal:
 
     ```bash
-   composer require psr/log
    composer require osa-eg/laravel-upayments
    ```
 
