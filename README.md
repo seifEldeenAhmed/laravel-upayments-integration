@@ -37,7 +37,7 @@ After publishing, the configuration file config/upayments.php will be created. Y
 
 return [
     'api_key'           => env('UPAYMENTS_API_KEY', ''), // Your Upayments API key
-    'api_url'           => env('UPAYMENTS_API_URL', 'https://sandboxapi.upayments.com/api/v1'),
+    'api_base_url'      => env('UPAYMENTS_API_URL', 'https://sandboxapi.upayments.com'),
     'logging_channel'   => env('UPAYMENTS_LOGGING_CHANNEL', 'stack'),
     'logging_enabled'   => env('UPAYMENTS_LOGGING_ENABLED', true),
 ];
@@ -46,7 +46,7 @@ return [
 ### Configuration Options
 
 - `api_key`: Your Upayments API key.
-- `api_url`: The base URL for the Upayments API. Use the sandbox URL for testing.
+- `api_base_url`: The base URL for the Upayments API. Use the sandbox URL for testing.
 - `logging_channel`: Specifies the logging channel to be used for logging requests and responses. Default is `'stack'`.
 - `logging_enabled`: Enables or disables logging. Set to `true` to enable logging or `false` to disable it.
 

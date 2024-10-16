@@ -21,23 +21,23 @@ class UpaymentsService
     protected array $parameters = [];
 
     protected const ENDPOINTS = [
-        'createPayment'              => '/charge',
-        'getPaymentStatus'           => '/get-payment-status',
-        'createRefund'               => '/create-refund',
-        'getRefundStatus'            => '/check-refund',
-        'checkSingleRefundStatus'    => '/check-refund-status',
-        'deleteRefund'               => '/delete-refund',
-        'createMultiVendorRefund'    => '/create-multivendor-refund',
-        'deleteMultiVendorRefund'    => '/delete-multivendor-refund',
-        'createCustomerToken'        => '/create-customer-unique-token',
-        'addCard'                    => '/add-card',
-        'retrieveCustomerCards'      => '/retrieve-customer-cards',
+        'createPayment'              => '/api/v1/charge',
+        'getPaymentStatus'           => '/api/v1/get-payment-status',
+        'createRefund'               => '/api/v1/create-refund',
+        'getRefundStatus'            => '/api/v1/check-refund',
+        'checkSingleRefundStatus'    => '/api/v1/check-refund-status',
+        'deleteRefund'               => '/api/v1/delete-refund',
+        'createMultiVendorRefund'    => '/api/v1/create-multivendor-refund',
+        'deleteMultiVendorRefund'    => '/api/v1/delete-multivendor-refund',
+        'createCustomerToken'        => '/api/v1/create-customer-unique-token',
+        'addCard'                    => '/api/v1/add-card',
+        'retrieveCustomerCards'      => '/api/v1/retrieve-customer-cards',
     ];
 
     public function __construct($apiKey = null, $baseUrl = null, $logChannel = null, $loggingEnabled = null)
     {
         $this->apiKey         = $apiKey ?? config('upayments.api_key');
-        $this->baseUrl        = $baseUrl ?? config('upayments.api_url');
+        $this->baseUrl        = $baseUrl ?? config('upayments.api_base_url');
         $this->logChannel     = $logChannel ?? config('upayments.logging_channel', 'default');
         $this->loggingEnabled = $loggingEnabled ?? config('upayments.logging_enabled', true);
 
@@ -120,12 +120,20 @@ class UpaymentsService
                     'body'    => (string) $request->getBody(),
                 ]);
             },
-            function (ResponseInterface $response) {
-                Log::channel($this->logChannel)->info('Response', [
-                    'status'  => $response->getStatusCode(),
-                    'headers' => $response->getHeaders(),
-                    'body'    => (string) $response->getBody(),
-                ]);
+            function ($responseOrException) {
+                if ($responseOrException instanceof ResponseInterface) {
+                    Log::channel($this->logChannel)->info('Response', [
+                        'status'  => $responseOrException->getStatusCode(),
+                        'headers' => $responseOrException->getHeaders(),
+                        'body'    => (string) $responseOrException->getBody(),
+                    ]);
+                } elseif ($responseOrException instanceof RequestException) {
+                    Log::channel($this->logChannel)->error('Request Exception', [
+                        'message' => $responseOrException->getMessage(),
+                        'code'    => $responseOrException->getCode(),
+                        'request' => (string) $responseOrException->getRequest()->getBody(),
+                    ]);
+                }
             }
         );
     }
