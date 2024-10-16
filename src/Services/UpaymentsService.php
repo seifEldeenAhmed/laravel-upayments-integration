@@ -259,7 +259,8 @@ class UpaymentsService
         $requiredFields = [ 'order' , 'paymentGateway', 'returnUrl', 'cancelUrl', 'notificationUrl'];
 
         if (isset($this->parameters['paymentGateway']) && $this->parameters['paymentGateway']['src'] === 'create-invoice'){
-            array_push($requiredFields, ['customer','notificationType']);
+            array_push($requiredFields, 'customer');
+            array_push($requiredFields, 'notificationType');
         }
         $this->validateRequiredFields($this->parameters, $requiredFields);
 
