@@ -84,7 +84,7 @@ In your config/logging.php:
     ```php
     use Upayment;
 
-    $response = Upayment::addProduct('Test Product', 'Description', 100.0, 1)
+    $response = Upayments::addProduct('Test Product', 'Description', 100.0, 1)
         ->setOrder([
             'id' => 'ORD123',
             'reference' => 'REF123',
@@ -114,13 +114,13 @@ In your config/logging.php:
 2. **Retrieve payment status:**
 
     ```php
-    $response = Upayment::getPaymentStatus('ORD123', 'trackId');
+    $response = Upayments::getPaymentStatus('ORD123', 'trackId');
     ```
 
 3. **Create a refund:**
 
     ```php
-    $response = Upayment::createRefund('ORD123', 50.0, [
+    $response = Upayments::createRefund('ORD123', 50.0, [
         'customerFirstName' => 'John',
         'customerEmail' => 'john.doe@example.com',
         'reference' => 'REF12345',
@@ -131,7 +131,7 @@ In your config/logging.php:
 4. **Multi-vendor refund:**
 
     ```php
-    $response = Upayment::addRefundVendor([
+    $response = Upayments::addRefundVendor([
             'refundRequestId' => 'REF123',
             'ibanNumber' => 'KW91KFHO0000000000051010173254',
             'totalPaid' => '100.0',
