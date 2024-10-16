@@ -15,7 +15,7 @@ A Laravel package for integrating the Upayment payment gateway. It provides a co
 2. **Publish the configuration file:**
 
     ```bash
-    php artisan vendor:publish --provider="Osama\Upayments\Providers\UpaymentServiceProvider" --tag="config"
+    php artisan vendor:publish --provider="Osama\Upayments\Providers\UpaymentsServiceProvider" --tag="config"
     ```
 
 3. **Configure your environment:**
