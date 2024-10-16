@@ -170,7 +170,7 @@ class UpaymentsService
 
     public function setOrder(array $orderData): self
     {
-        $requiredFields = ['id', 'reference', 'description', 'currency', 'amount'];
+        $requiredFields = ['id', 'description', 'currency', 'amount'];
         $this->validateRequiredFields($orderData, $requiredFields);
 
         $this->parameters['order'] = $orderData;
@@ -203,18 +203,24 @@ class UpaymentsService
 
     public function setReference(string $id): self
     {
+
         $this->parameters['reference'] = ['id' => $id];
         return $this;
     }
 
     public function setCustomerExtraData(array $data): self
     {
+        $requiredFields = ['amount', 'knetCharge', 'knetChargeType', 'ccCharge','ccChargeType','ibanNumber'];
+        $this->validateRequiredFields($data, $requiredFields);
+
         $this->parameters['customerExtraData'] = $data;
         return $this;
     }
 
     public function addMerchantData(array $merchantData): self
     {
+        $this->validateRequiredFields($this->parameters, [ 'order' , 'paymentGateway', 'returnUrl', 'cancelUrl', 'notificationUrl']);
+
         $this->parameters['extraMerchantData'][] = $merchantData;
         return $this;
     }
@@ -240,13 +246,13 @@ class UpaymentsService
     public function createPayment(): array
     {
         // Validate that required parameters are set
-        $this->validateRequiredFields($this->parameters, ['products', 'order', 'customer', 'paymentGateway', 'returnUrl']);
+        $this->validateRequiredFields($this->parameters, [ 'order' , 'paymentGateway', 'returnUrl', 'cancelUrl', 'notificationUrl']);
 
         $endpoint = self::ENDPOINTS['createPayment'];
         return $this->sendRequest('POST', $endpoint, $this->parameters);
     }
 
-    public function getPaymentStatus(string $id, string $type = 'invoiceId'): array
+    public function getPaymentStatus(string $id, string $type = 'trackId'): array
     {
         $endpoint = $type === 'trackId'
             ? self::ENDPOINTS['getPaymentStatus'] . "/$id"
