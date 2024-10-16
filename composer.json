@@ -1,0 +1,39 @@
+{
+    "name": "osa-eg/laravel-upayments",
+    "description": "A Laravel package for integrating Upayments gateway.",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Osama Saad",
+            "email": "osaad96eg@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0|^8.1|^8.2|^8.3",
+        "guzzlehttp/guzzle": "^7.0",
+        "illuminate/support": "^8.0|^9.0|^10.0|^11",
+        "psr/log": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Osama\\Upayments\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Osama\\Upayments\\Providers\\UpaymentsServiceProvider"
+            ],
+            "aliases": {
+                "Upayments": "Osama\\Upayments\\Facades\\Upayments"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "phpunit/phpunit": "^11.4"
+    }
+}
