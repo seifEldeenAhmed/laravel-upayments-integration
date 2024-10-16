@@ -4,7 +4,7 @@ namespace Osama\Upayments\Exceptions;
 
 use Exception;
 
-class UpaymentsValidationException extends Exception
+class UpaymentsValidationException extends UpaymentsException
 {
     /**
      * UpaymentsValidationException constructor.

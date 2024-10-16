@@ -9,19 +9,9 @@ A Laravel package for integrating the Upayment payment gateway. It provides a co
    Run the following command in your terminal:
 
     ```bash
-    composer require osa-eg/laravel-upayments -W
-    ```
-
-   The `-W` flag allows Composer to upgrade dependencies if needed. This can resolve version conflicts, such as when the project requires a different version of `psr/log`.
-
-**If there are still conflicts with `psr/log`:**
-
-   If you encounter an error stating that the `psr/log` version is incompatible, you can manually update `psr/log` to a compatible version before installing the package:
-
-    ```bash
-    composer require psr/log:^3.0
-    composer require osa-eg/laravel-upayments
-    ```
+   composer require psr/log
+   composer require osa-eg/laravel-upayments
+   ```
 
 2. **Publish the configuration file:**
 
@@ -34,14 +24,58 @@ A Laravel package for integrating the Upayment payment gateway. It provides a co
    Update your `.env` file with the following:
 
     ```dotenv
-    UPAYMENT_API_KEY=your_upayment_api_key
-    UPAYMENT_API_URL=https://sandboxapi.upayments.com/api/v1
-    ```
+    UPAYMENTS_API_KEY=your_upayments_api_key
+    UPAYMENTS_API_URL=https://sandboxapi.upayments.com/api/v1
+    UPAYMENTS_LOGGING_CHANNEL=stack
+    UPAYMENTS_LOGGING_ENABLED=true
+   ```
 
 ## Configuration
 
-After publishing, the configuration file `config/upayments.php` will be created. You can modify it according to your needs.
+After publishing, the configuration file config/upayments.php will be created. You can modify it according to your needs.
+```php
+<?php
 
+return [
+    'api_key'           => env('UPAYMENTS_API_KEY', ''), // Your Upayments API key
+    'api_url'           => env('UPAYMENTS_API_URL', 'https://sandboxapi.upayments.com/api/v1'),
+    'logging_channel'   => env('UPAYMENTS_LOGGING_CHANNEL', 'stack'),
+    'logging_enabled'   => env('UPAYMENTS_LOGGING_ENABLED', true),
+];
+```
+
+### Configuration Options
+
+- `api_key`: Your Upayments API key.
+- `api_url`: The base URL for the Upayments API. Use the sandbox URL for testing.
+- `logging_channel`: Specifies the logging channel to be used for logging requests and responses. Default is `'stack'`.
+- `logging_enabled`: Enables or disables logging. Set to `true` to enable logging or `false` to disable it.
+
+### Logging
+
+The package includes logging functionality to help you debug and monitor API requests and responses.
+
+- `Enabling/Disabling` Logging: You can enable or disable logging by setting the UPAYMENTS_LOGGING_ENABLED value in your .env file to true or false.
+- `ging Channel`: Specify the logging channel in your .env file using UPAYMENTS_LOGGING_CHANNEL. This should correspond to a channel defined in your config/logging.php file.
+
+Example Logging Configuration
+
+In your .env file:
+```dotenv
+UPAYMENTS_LOGGING_CHANNEL=upayments
+UPAYMENTS_LOGGING_ENABLED=true
+```
+In your config/logging.php:
+```php
+'channels' => [
+    // Other channels...
+    'upayments' => [
+        'driver' => 'single',
+        'path' => storage_path('logs/upayments.log'),
+        'level' => 'info',
+    ],
+],
+```
 ## Usage
 
 ### Basic Usage

@@ -4,7 +4,7 @@ namespace Osama\Upayments\Exceptions;
 
 use Exception;
 
-class UpaymentsApiException extends Exception
+class UpaymentsApiException extends UpaymentsException
 {
     protected array $apiResponse;
 

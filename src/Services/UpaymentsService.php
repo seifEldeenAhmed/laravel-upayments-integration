@@ -4,13 +4,14 @@ namespace Osama\Upayments\Services;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\HandlerStack;
 use Psr\Http\Message\RequestInterface;
-use Psr\Log\LoggerInterface;
-use Osama\Upayments\Exceptions\UpaymentsValidationException;
+use Psr\Http\Message\ResponseInterface;
+use Illuminate\Support\Facades\Log;
+use Osama\Upayments\Exceptions\UpaymentsException;
 use Osama\Upayments\Exceptions\UpaymentsApiException;
+use Osama\Upayments\Exceptions\UpaymentsValidationException;
 
 class UpaymentsService
 {
@@ -33,19 +34,21 @@ class UpaymentsService
         'retrieveCustomerCards'      => '/retrieve-customer-cards',
     ];
 
-    public function __construct(LoggerInterface $logger, $apiKey =null , $baseUrl = null)
+    public function __construct($apiKey = null, $baseUrl = null, $logChannel = null, $loggingEnabled = null)
     {
-            $this->apiKey  = $apiKey??config('upayments.api_key');
-            $this->baseUrl = $baseUrl??config('upayments.api_url');
+        $this->apiKey         = $apiKey ?? config('upayments.api_key');
+        $this->baseUrl        = $baseUrl ?? config('upayments.api_url');
+        $this->logChannel     = $logChannel ?? config('upayments.logging_channel', 'default');
+        $this->loggingEnabled = $loggingEnabled ?? config('upayments.logging_enabled', true);
 
         $handlerStack = HandlerStack::create();
 
         // Add retry middleware
         $handlerStack->push($this->retryMiddleware());
 
-        // Add logging middleware if a logger is provided
-        if ($logger) {
-            $handlerStack->push($this->loggingMiddleware($logger));
+        // Conditionally add logging middleware
+        if ($this->loggingEnabled) {
+            $handlerStack->push($this->loggingMiddleware());
         }
 
         $this->client = new Client([
@@ -58,6 +61,7 @@ class UpaymentsService
             ],
         ]);
     }
+
 
     protected function sendRequest(string $method, string $endpoint, array $body = []): array
     {
@@ -87,7 +91,6 @@ class UpaymentsService
             throw new UpaymentsException($errorResponse['message'] ?? 'Unknown error', $e->getCode(), $e);
         }
     }
-
     private function retryMiddleware()
     {
         return Middleware::retry(
@@ -106,11 +109,24 @@ class UpaymentsService
         );
     }
 
-    private function loggingMiddleware(LoggerInterface $logger)
+    private function loggingMiddleware()
     {
-        return Middleware::log(
-            $logger,
-            new \GuzzleHttp\MessageFormatter('{req_body} - {res_body}')
+        return Middleware::tap(
+            function (RequestInterface $request, $options) {
+                Log::channel($this->logChannel)->info('Request', [
+                    'method'  => $request->getMethod(),
+                    'uri'     => (string) $request->getUri(),
+                    'headers' => $request->getHeaders(),
+                    'body'    => (string) $request->getBody(),
+                ]);
+            },
+            function (ResponseInterface $response) {
+                Log::channel($this->logChannel)->info('Response', [
+                    'status'  => $response->getStatusCode(),
+                    'headers' => $response->getHeaders(),
+                    'body'    => (string) $response->getBody(),
+                ]);
+            }
         );
     }
 
