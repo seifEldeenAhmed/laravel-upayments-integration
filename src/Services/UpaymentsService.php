@@ -243,6 +243,16 @@ class UpaymentsService
         return $this;
     }
 
+    public function setNotificationType(string $type): self
+    {
+        if(!in_array($type,['email','sms','link','all'])){
+            throw new UpaymentsValidationException("The field notification type is must be one of 'email','sms','link','all' ");
+        }
+
+        $this->parameters['notificationType'] = $type;
+        return $this;
+    }
+
     public function createPayment(): array
     {
         // Validate that required parameters are set
