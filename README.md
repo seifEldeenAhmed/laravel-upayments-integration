@@ -152,3 +152,15 @@ To run the tests, use the following command:
 
 ```bash
 vendor/bin/phpunit
+```
+## Contributing
+
+Feel free to submit issues or pull requests for improvements and bug fixes.
+
+## License
+
+The Laravel Upayment Integration package is open-sourced software licensed under the MIT license.
+
+```
+This `README.md` provides comprehensive documentation on how to use the package, including installation, configuration, usage examples, and available methods. It serves as a guide for integrating and utilizing the Laravel Upayment Integration package effectively.
+```
