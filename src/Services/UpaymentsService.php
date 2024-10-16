@@ -256,7 +256,12 @@ class UpaymentsService
     public function createPayment(): array
     {
         // Validate that required parameters are set
-        $this->validateRequiredFields($this->parameters, [ 'order' , 'paymentGateway', 'returnUrl', 'cancelUrl', 'notificationUrl']);
+        $requiredFields = [ 'order' , 'paymentGateway', 'returnUrl', 'cancelUrl', 'notificationUrl'];
+
+        if (isset($this->parameters['paymentGateway']) && $this->parameters['paymentGateway']['src'] === 'create-invoice'){
+            array_push($requiredFields, ['customer','notificationType']);
+        }
+        $this->validateRequiredFields($this->parameters, $requiredFields);
 
         $endpoint = self::ENDPOINTS['createPayment'];
         return $this->sendRequest('POST', $endpoint, $this->parameters);
