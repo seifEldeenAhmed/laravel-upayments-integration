@@ -285,7 +285,7 @@ class UpaymentsService
         return $this->sendRequest('GET', $endpoint);
     }
 
-    public function checkPaymentButtonStatus(string $id, string $type = 'trackId'): array
+    public function checkPaymentButtonStatus(): array
     {
         $endpoint = self::ENDPOINTS['checkPaymentButtonStatus'] ;
 

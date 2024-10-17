@@ -170,6 +170,7 @@ In your config/logging.php:
 - `setNotificationUrl($url)`
 - `createPayment()`
 - `getPaymentStatus($id, $type = 'invoiceId')`
+- `checkPaymentButtonStatus()`
 
 ### Refund Methods
 
