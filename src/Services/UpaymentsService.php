@@ -32,6 +32,7 @@ class UpaymentsService
         'createCustomerToken'        => '/api/v1/create-customer-unique-token',
         'addCard'                    => '/api/v1/add-card',
         'retrieveCustomerCards'      => '/api/v1/retrieve-customer-cards',
+        'checkPaymentButtonStatus'   =>'/api/v1/check-payment-button-status'
     ];
 
     public function __construct($apiKey = null, $baseUrl = null, $logChannel = null, $loggingEnabled = null)
@@ -208,10 +209,17 @@ class UpaymentsService
         return $this;
     }
 
-    public function setCustomerExtraData(array $data): self
+    public function setExtraMerchantData(array $data): self
     {
         $requiredFields = ['amount', 'knetCharge', 'knetChargeType', 'ccCharge','ccChargeType','ibanNumber'];
         $this->validateRequiredFields($data, $requiredFields);
+
+        $this->parameters['extraMerchantData'][] = $data;
+        return $this;
+    }
+
+    public function setCustomerExtraData(string $data): self
+    {
 
         $this->parameters['customerExtraData'] = $data;
         return $this;
@@ -273,6 +281,13 @@ class UpaymentsService
         $endpoint = $type === 'trackId'
             ? self::ENDPOINTS['getPaymentStatus'] . "/$id"
             : self::ENDPOINTS['getPaymentStatus'] . "?invoice_id=$id";
+
+        return $this->sendRequest('GET', $endpoint);
+    }
+
+    public function checkPaymentButtonStatus(string $id, string $type = 'trackId'): array
+    {
+        $endpoint = self::ENDPOINTS['checkPaymentButtonStatus'] ;
 
         return $this->sendRequest('GET', $endpoint);
     }
