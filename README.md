@@ -2,6 +2,12 @@
 
 A Laravel package for integrating the Upayment payment gateway. It provides a convenient way to interact with the Upayment API, allowing you to create payments, refunds, manage cards, and more.
 
+<!-- Full-width image -->
+<p align="center">
+  <img src="assets/images/upayments.jpg" alt="Image 2" style="width:100%;">
+</p>
+
+
 ## Installation
 
 1. **Require the package using Composer:**
