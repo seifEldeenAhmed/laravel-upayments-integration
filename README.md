@@ -179,6 +179,7 @@ In your config/logging.php:
 - `markAsWhiteLabeled()`
 - `markAsNoneWhiteLabeled()`
 - `createPayment()`
+- `setLanguage()`
 - `getPaymentStatus($id, $type = 'invoiceId')`
 - `checkPaymentButtonStatus()`
 
