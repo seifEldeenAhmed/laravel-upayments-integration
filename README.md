@@ -110,6 +110,7 @@ In your config/logging.php:
         ->setNotificationUrl('https://example.com/notify')
         ->setReference('REF123')
         ->setLanguage('en')
+        ->markAsWhiteLabeled() // or markAsNonWhiteLabeled()
         ->createPayment();
     
     if ($response['status']) {
@@ -174,6 +175,9 @@ In your config/logging.php:
 - `setReturnUrl($url)`
 - `setCancelUrl($url)`
 - `setNotificationUrl($url)`
+- `setNotificationType() `  `//in case setPaymentGateway('create-invoice') `
+- `markAsWhiteLabeled()`
+- `markAsNoneWhiteLabeled()`
 - `createPayment()`
 - `getPaymentStatus($id, $type = 'invoiceId')`
 - `checkPaymentButtonStatus()`

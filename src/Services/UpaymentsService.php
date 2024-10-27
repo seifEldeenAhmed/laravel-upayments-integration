@@ -16,6 +16,7 @@ use Osama\Upayments\Exceptions\UpaymentsValidationException;
 class UpaymentsService
 {
     public Client $client;
+    protected bool $isWhiteLabeled = false;
     protected string $apiKey;
     protected string $baseUrl;
     protected array $parameters = [];
@@ -169,6 +170,21 @@ class UpaymentsService
         return $this;
     }
 
+    public function markAsWhiteLabeled(): self
+    {
+        $this->isWhiteLabeled = true;
+
+        return $this;
+    }
+
+
+    public function markAsNonWhiteLabeled(): self
+    {
+        $this->isWhiteLabeled = false;
+
+        return $this;
+    }
+
     public function setOrder(array $orderData): self
     {
         $requiredFields = ['id', 'description', 'currency', 'amount'];
@@ -192,6 +208,12 @@ class UpaymentsService
         if (empty($source)) {
             throw new UpaymentsValidationException("The payment gateway source is required.");
         }
+
+        if (!in_array($source,['knet', 'cc', 'samsung-pay', 'apple-pay', 'google-pay' , 'create-invoice'])) {
+            throw new UpaymentsValidationException("The payment gateway source is not valid, please add one of knet, cc, samsung-pay, apple-pay, google-pay and create-invoice.");
+        }
+
+
         $this->parameters['paymentGateway']['src'] = $source;
         return $this;
     }
@@ -264,7 +286,9 @@ class UpaymentsService
     public function createPayment(): array
     {
         // Validate that required parameters are set
-        $requiredFields = [ 'order' , 'paymentGateway', 'returnUrl', 'cancelUrl', 'notificationUrl'];
+        $requiredFields = [ 'order' ,  'returnUrl', 'cancelUrl', 'notificationUrl'];
+        if($this->isWhiteLabeled)
+            $requiredFields[] = 'paymentGateway';
 
         if (isset($this->parameters['paymentGateway']) && $this->parameters['paymentGateway']['src'] === 'create-invoice'){
             array_push($requiredFields, 'customer');
